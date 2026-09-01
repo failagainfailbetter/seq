@@ -1,0 +1,50 @@
+name: Build Layman Manual PDF
+
+on:
+  push:
+    paths:
+      - 'docs/Seq_Layman_Manual.md'
+      - '.github/workflows/layman-manual-pdf.yml'
+  pull_request:
+    paths:
+      - 'docs/Seq_Layman_Manual.md'
+      - '.github/workflows/layman-manual-pdf.yml'
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-pdf:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build PDF with Pandoc
+        uses: docker://pandoc/latex:3.5
+        with:
+          args: >-
+            --from=gfm
+            --toc
+            --toc-depth=3
+            --pdf-engine=xelatex
+            -V geometry:margin=1in
+            -V colorlinks=true
+            -o docs/Seq_Layman_Manual.pdf
+            docs/Seq_Layman_Manual.md
+
+      - name: Upload workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Seq_Layman_Manual.pdf
+          path: docs/Seq_Layman_Manual.pdf
+
+      - name: Upload PDF to Release assets
+        if: github.event_name == 'release'
+        uses: softprops/action-gh-release@v2
+        with:
+          files: docs/Seq_Layman_Manual.pdf
