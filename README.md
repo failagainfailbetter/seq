@@ -34,6 +34,7 @@ Seq is written in pure Java.  It runs on MacOS, Linux, and Windows.
 ## Manual
 
 * Seq has an [initial manual](https://people.cs.gmu.edu/~eclab/projects/seq/seq.pdf) which explains the basics of using it.
+* For non-technical users, see the downloadable beginner guide: [docs/Seq_Layman_Manual.md](docs/Seq_Layman_Manual.md)
 
 * Interested in helping out on Seq?  Get ahold of us! Sean's email address is on the front page of the manual.
 
@@ -139,5 +140,4 @@ Don't worry about it.  Java is now, for no good reason, starting to issue warnin
 	java --enable-native-access=ALL-UNNAMED -jar seq.jar 
 
 ... but not now.
-
 
