@@ -1,9 +1,8 @@
-# Seq Beginner Manual (Layman-Friendly)
+# Seq Beginner Manual (Windows Guide)
 
-This guide is for people who want to **make music with Seq** without reading technical developer docs first.
+This guide is for **Windows users** who want to **make music with Seq** without reading technical developer docs first.
 
 If you are on GitHub, open this file and click **Download raw file** to save it for offline use.
-You can also download a ready-made PDF from the repository **Releases** page (look for the `Seq_Layman_Manual.pdf` asset).
 
 ---
 
@@ -17,147 +16,149 @@ In Seq, those building blocks are called **motifs** (explained in the glossary a
 
 ---
 
-## 2) System requirements / prerequisites
+## 2) System requirements / prerequisites (Windows)
 
-- **OS:** Windows, macOS, or Linux
+- **OS:** Windows 10 or newer (Windows 11 recommended)
 - **Java:** **Java 20 or newer** (required for `.jar` launch and source builds)
 - **For making sound:** A MIDI destination (hardware synth, virtual synth, DAW MIDI port, etc.)
 - **Optional:** MIDI keyboard/controller for recording notes in real time
+- **For Reaper integration:** Cockos Reaper (any recent version)
 
 Notes:
-- Seq is written in Java and is cross-platform.
-- The repository includes a Mac app package route and cross-platform JAR workflow.
+- Seq is written in Java and runs on Windows via the `.jar` file.
+- Windows 10/11 include native virtual MIDI support; no third-party software required.
 
 ---
 
-## 3) Installation guide (Windows, macOS, Linux)
+## 3) Installation guide (Windows)
 
-### macOS (easy path)
-1. Download the macOS app package from the project link in `README.md` (`Seq.dmg`).
-2. Drag `Seq.app` to `/Applications`.
-3. Open Seq.
+### Step 1: Install Java 20 or newer
 
-If macOS blocks launch:
-- **Older macOS:** Control-click app icon -> **Open**
-- **Sequoia and later:** run in Terminal:
-
-```bash
-sudo xattr -cr /Applications/Seq.app
-```
-
-Then launch again.
-
-### Windows
-1. Install **Java 20 or newer**:
-   - Download a JDK from Adoptium, Oracle, or Microsoft OpenJDK.
-   - In PowerShell, confirm install:
-     ```powershell
-     java -version
+1. Visit [adoptium.net](https://adoptium.net) or [oracle.com/java](https://www.oracle.com/java/technologies/downloads/).
+2. Download the **Windows x64 Installer** (LTS version 20 or newer).
+3. Run the installer and follow the prompts. Accept default paths.
+4. **Restart your computer** to ensure Java is added to your system PATH.
+5. Verify installation:
+   - Open **Command Prompt** (Win+R, type `cmd`, press Enter).
+   - Type: `java -version`
+   - You should see version 20 or higher. Example output:
      ```
-   - If Java is not found, reopen terminal and verify Java is on `PATH`.
-2. Download `seq.jar` (project link in `README.md`) or build `install/seq.jar` from source.
-3. If double-click does not launch, run from Command Prompt:
-   ```bat
-   java -jar seq.jar
-   ```
-4. Configure MIDI output in Seq:
-   - Open **MIDI -> Set MIDI Devices**
-   - Select your output destination (hardware synth, virtual MIDI port, or DAW bridge)
-   - Choose channel and click **Set**
-5. Verify sound:
-   - Load `songs/demo1.seq`
-   - Press **Play**
-   - Confirm receiving synth/DAW track is armed to monitor MIDI
-6. Optional low-latency launch:
-   ```bat
-   java -XX:+UseZGC -XX:MaxGCPauseMillis=1 -jar seq.jar
-   ```
+     java version "21.0.1" 2023-10-17 LTS
+     ```
 
-### Linux
-1. Install Java 20+ (OpenJDK is fine).
-2. Download `seq.jar`.
-3. If needed, set `.jar` files to open with Java.
-4. Double-click `seq.jar` (or use command line launch below).
+### Step 2: Obtain and launch Seq
+
+1. Download `seq.jar` from the project repository (link in `README.md`) or build `install/seq.jar` from source.
+2. Save it to a folder on your computer (e.g., `C:\Users\[YourName]\Music\Seq\` or Desktop).
+3. **Easiest launch:** Double-click `seq.jar`.
+   - If Java is properly installed, the app should open immediately.
+4. **If double-click doesn't work:**
+   - Right-click `seq.jar` → **Open with** → **Java(TM) Platform SE binary**.
+   - If Java is not listed, skip to the terminal method below.
+5. **Terminal launch (fallback):**
+   - Open **Command Prompt** in the folder containing `seq.jar` (Shift+Right-click in the folder → **Open PowerShell window here**).
+   - Type: `java -jar seq.jar`
+   - Press Enter.
+
+### Step 3: Configure MIDI output
+
+1. After Seq opens, go to **MIDI → Set MIDI Devices**.
+2. Under **MIDI Outputs**, select at least one destination:
+   - A hardware synth or MIDI device
+   - A DAW (e.g., Reaper) listening on a virtual MIDI port
+   - A software synth that accepts MIDI input
+3. Choose the appropriate channel (or leave as **All Channels** for now).
+4. Click **Set**.
+
+### Step 4: Verify sound works
+
+1. Open **File → Load Sequence...** and load `songs/demo1.seq` from the repo.
+2. Press **Play** in the Transport (top-left controls).
+3. You should hear music from your synth/DAW.
+4. If no sound:
+   - Re-check MIDI output assignment in **MIDI → Set MIDI Devices**.
+   - Confirm the destination (synth, DAW, etc.) is armed and listening for MIDI.
+   - Try a different output device.
+5. Press **Stop** when done.
 
 ---
 
-## 4) Build-from-source guide
+## 4) Build-from-source guide (Windows)
 
-From the repository root:
+### Prerequisites
+- Java 20+ installed (see Step 1 above).
+- GNU Make and a C/C++ compiler installed (e.g., MinGW64 or MSVC).
+- The Seq repository cloned locally.
 
-```bash
-cd /path/to/seq
-make all
-```
+### Build steps
 
-This compiles Seq using the bundled libraries in `libraries/`.
+From the repository root (e.g., `C:\path\to\seq`):
 
-To build a runnable JAR:
+1. Open **Command Prompt** or **PowerShell**.
+2. Change to the repo folder:
+   ```cmd
+   cd C:\path\to\seq
+   ```
+3. Compile all classes and resources:
+   ```cmd
+   make all
+   ```
+4. Build a runnable JAR:
+   ```cmd
+   make jar
+   ```
+   This produces: `install\seq.jar`
 
-```bash
-make jar
-```
+5. Launch the built JAR:
+   ```cmd
+   java -jar install\seq.jar
+   ```
 
-This produces:
-- `install/seq.jar`
+### Classpath launch (advanced)
 
-If you only want to run after compiling classes, launch with:
+If you only want to run after compiling (without building a JAR):
 
-```bash
-java -cp "./libraries/*:." seq.gui.SeqUI
-```
-
-Windows classpath variant:
-
-```bat
-java -cp ".;libraries/*" seq.gui.SeqUI
+```cmd
+java -cp ".;libraries\*" seq.gui.SeqUI
 ```
 
 ---
 
 ## 5) How to launch Seq
 
-### Double-click launch
-- macOS app: open `Seq.app`
-- Windows/Linux JAR: double-click `seq.jar` (or `install/seq.jar` if built locally)
+### Standard launch (recommended)
 
-### Command line launch
-Basic:
-
-```bash
+```cmd
 java -jar seq.jar
 ```
 
-Low-latency garbage collector option (recommended by project docs):
+Or simply double-click `seq.jar`.
 
-```bash
+### Low-latency launch (for better performance)
+
+Use the ZGC garbage collector to reduce audio glitches:
+
+```cmd
 java -XX:+UseZGC -XX:MaxGCPauseMillis=1 -jar seq.jar
-```
-
-On newer Java/macOS, you may eventually need:
-
-```bash
-java --enable-native-access=ALL-UNNAMED -jar seq.jar
 ```
 
 ---
 
 ## 6) First run / first song walkthrough
 
-Use the included example in the repo: `songs/demo1.seq`.
+Use the included demo song: `songs/demo1.seq`.
 
 1. Start Seq.
-2. Open **MIDI -> Set MIDI Devices**.
-3. Choose at least one output (your synth/plugin/device + channel), then click **Set**.
-4. Open **File -> Load Sequence...** and load `songs/demo1.seq`.
+2. Open **MIDI → Set MIDI Devices**.
+3. Select an output device and channel, then click **Set**.
+4. Open **File → Load Sequence...** and select `songs/demo1.seq`.
 5. Press **Play** in the Transport (top-left controls).
-6. If no sound:
-   - verify MIDI output assignment
-   - verify the receiving synth is running/listening
-   - check channel matches
-7. Press **Stop** when done.
-
-Tip: If notes get stuck, use **MIDI -> Panic**.
+6. You should hear the demo song play.
+7. If no sound:
+   - Verify MIDI output is set to an active device.
+   - Check that your synth/DAW is armed and listening.
+   - Try **MIDI → Panic** to clear any stuck notes.
+8. Press **Stop** when done.
 
 ---
 
@@ -208,167 +209,319 @@ This path keeps things simple and uses common motifs.
 
 ---
 
-## 9) Saving, loading, exporting
+## 9) Cockos Reaper DAW integration
 
-- **Save sequence:** `File -> Save Sequence` / `Save Sequence As...`
-- **Load sequence:** `File -> Load Sequence...`
-- **Merge another sequence into current project:** `File -> Merge Sequence...`
-- **Export rooted sequence:** `File -> Export Root As...`  
+**Reaper** is a popular, affordable DAW that works perfectly with Seq via Windows MIDI routing.
+
+### Why Seq + Reaper?
+- Seq excels at **hierarchical, modular composition** (creating reusable building blocks).
+- Reaper excels at **timeline editing, mixing, effects, and exporting**.
+- Together: compose with Seq's motif-based workflow, then arrange and mix in Reaper.
+
+### Step 1: Create a virtual MIDI port (Windows 10/11 native)
+
+Windows 10/11 include built-in virtual MIDI support. Create a loopback port using native Windows:
+
+1. Open **Settings** → search for **"MIDI"** → select **MIDI Settings**.
+2. Look for built-in virtual MIDI ports under **Inputs** and **Outputs**.
+3. If none exist, Windows will automatically create one when Seq and Reaper both request MIDI routing.
+
+### Step 2: Create a virtual MIDI loopback (if needed)
+
+If Windows doesn't expose virtual ports, use **VB-Audio Virtual MIDI Router** (free, lightweight):
+
+1. Download from [vb-audio.com](https://vb-audio.com/Voicemeeter/index.htm) or search "Virtual MIDI Router Windows 11".
+2. Install and restart your computer.
+3. A virtual MIDI port will be available in Seq and Reaper MIDI device lists.
+
+### Step 3: Configure Seq MIDI output
+
+1. Open Seq.
+2. Go **MIDI → Set MIDI Devices**.
+3. Under **MIDI Outputs**, enable:
+   - The virtual MIDI loopback port (e.g., "Virtual MIDI Router Out" or Windows built-in port)
+   - Any hardware synths you're using directly
+4. Click **Set**.
+
+### Step 4: Configure Reaper to receive Seq MIDI
+
+1. Open **Reaper**.
+2. Go **Options → Preferences → MIDI Devices**.
+3. Under **MIDI inputs**, enable the same virtual port that Seq outputs to.
+4. Set to **Enabled + Control** if you want Reaper to receive sync/transport from Seq (optional).
+5. Click **OK**.
+
+### Step 5: Create a Reaper track for Seq
+
+1. In Reaper, click **Track → Insert new track**.
+2. Double-click the new track to open its properties.
+3. Under **Input**:
+   - Set to: **MIDI → [Your virtual port] → All Channels** (or a specific channel).
+4. Under **Input mode**, ensure it's set to monitor incoming MIDI in real time.
+5. Add a virtual instrument (VSTi) to the track:
+   - Click **FX** button → insert a synth (e.g., ReaSynth, Synth1, etc.).
+6. Arm the track for recording (click the red **Rec** button).
+
+### Step 6: Record Seq into Reaper
+
+1. In Reaper, press **Record** (default shortcut: Ctrl+Alt+Space).
+2. Start playback in Seq (press **Play**).
+3. Seq's MIDI flows into the Reaper track in real time.
+4. Perform/compose live in Seq while Reaper captures it.
+5. Stop Reaper's recording when done. The MIDI clip is now on the track.
+
+### Step 7: Edit, mix, and export
+
+In Reaper, you can now:
+- Edit the MIDI clip with Reaper's piano roll.
+- Layer multiple Seq recordings on different tracks.
+- Add effects, EQ, compression to each track.
+- Arrange clips on the timeline.
+- Export as MP3, WAV, FLAC, etc.
+
+### Seq + Reaper workflow tips
+
+- **Live performance:** Keep Reaper recording; perform live variations in Seq by changing root motifs or adjusting probability/delays.
+- **Layered arrangements:** Record one Seq session, copy the MIDI clip, and edit for variations.
+- **Tempo sync:** Match Seq's **Clock Options** tempo to Reaper's project tempo (shown in Reaper's top toolbar).
+- **Channel organization:** Use separate MIDI channels per instrument (e.g., drums ch10, bass ch2, leads ch3) for cleaner routing.
+- **Save templates:** Save Reaper templates with track layouts + VSTi chains, and Seq starter projects, so you can load them together.
+
+### Troubleshooting Seq + Reaper
+
+**No MIDI in Reaper:**
+- Confirm the virtual MIDI port exists in Windows MIDI Settings.
+- In Seq, check **MIDI → Set MIDI Devices** and verify the output port is enabled.
+- In Reaper, go **Options → Preferences → MIDI Devices** and enable the same input port.
+- Restart Reaper if changes don't take effect.
+
+**Track meters move but no sound:**
+- Ensure a VSTi is loaded on the track (click **FX** and insert a synth).
+- Enable input monitoring on the track (look for a speaker icon or **Monitor** button).
+- Check track volume fader is not at zero.
+
+**High latency / timing issues:**
+- In Reaper: **Options → Preferences → Audio Device** → lower buffer size (start at 64–256 samples).
+- In Seq: use low-latency launch (`java -XX:+UseZGC -XX:MaxGCPauseMillis=1 -jar seq.jar`).
+- Reduce background CPU load (close other apps).
+
+**Stuck/repeating notes:**
+- In Seq: use **MIDI → Panic** to send all-notes-off.
+- In Reaper: stop playback and use **MIDI → Clear all notes**.
+
+---
+
+## 10) Advanced compositional examples
+
+These examples are designed to be built directly with standard Seq motifs.
+
+### Example 1: Generative variation with probability
+
+Goal: make a repeating groove that evolves without manually rewriting patterns.
+
+**Setup:**
+1. Create a base **Step Sequence** motif for drums: `Drums_Base`.
+2. Duplicate it 2–3 times and alter only a few hits/velocities: `Drums_Var1`, `Drums_Var2`.
+3. Create a **Series** motif called `Drums_Evolving`.
+4. Add the base and variants as children in the Series.
+5. Set child probabilities (e.g., Base 70%, Var1 20%, Var2 10%) so the base dominates but variations emerge.
+6. Add slight delay offsets on rare variants for a humanized feel.
+
+**Result:** A drum groove that stays recognizable but never repeats exactly.
+
+---
+
+### Example 2: Polyrhythmic layering (3 against 4)
+
+Goal: create motion by superimposing contrasting cycle lengths.
+
+**Setup:**
+1. Create a **Step Sequence** with an accent pattern repeating every 3 steps: `Accent_Triplet`.
+2. Create another **Step Sequence** with pulses repeating every 4 steps: `Pulse_Quad`.
+3. Place both in a **Parallel** motif called `Polyrhythm`.
+4. Route each to different MIDI channels/instruments for timbral contrast.
+5. Let playback run long enough (12–16 bars) to hear the full phase relationship and re-alignment.
+
+**Result:** A mesmerizing polyrhythmic texture that resolves periodically.
+
+---
+
+### Example 3: Hierarchical theme and variations
+
+Goal: keep one musical identity while evolving arrangement depth.
+
+**Setup:**
+1. Write a short **Notes** motif (4 bars) as the core theme: `Theme_A`.
+2. Duplicate and transpose/modify to create variations: `Theme_A_Inv` (inversion), `Theme_A_Retrograde`.
+3. Group variations inside a **Series** motif:
+   - Child 1: `Theme_A` (statement)
+   - Child 2: `Theme_A_Inv` (answer)
+   - Child 3: `Theme_A` (reprise)
+4. Wrap the Series in a **Parallel** motif with a constant harmonic pad: `Theme_With_Harmony`.
+5. Set this top Parallel as the **Root Motif**.
+
+**Result:** A classical-style theme-and-variations form emerges hierarchically.
+
+---
+
+### Example 4: Stochastic composition with generators
+
+Goal: produce controlled randomness for ambient or algorithmic music.
+
+**Setup:**
+1. Use a **Generator** motif (if available) or create a Notes motif with random note selections.
+2. Set pitch range constraints (e.g., C3–C5).
+3. Limit rhythmic density (e.g., 40% rest probability, note lengths between 1/8 and 1 bar).
+4. Place the generator output in a **Parallel** motif with a slower harmonic backing.
+5. Record several passes into Reaper and comp (copy best sections) to create a finished piece.
+6. Freeze best random states by copying generated sequences into fixed Notes motifs.
+
+**Result:** Evolving, never-quite-the-same sections suitable for ambient or algorithmic music.
+
+---
+
+### Example 5: Call-and-response song form
+
+Goal: alternate musical statements between two voices.
+
+**Setup:**
+1. Create a **Notes** motif for a melodic "call" (4 bars, ends in mid-phrase): `Call_Lead`.
+2. Create a matching "response" **Notes** motif (4 bars, ends with resolution): `Response_Bass`.
+3. Create a **Series** motif alternating them:
+   - Child 1: `Call_Lead`
+   - Child 2: `Response_Bass`
+   - Child 3: `Call_Lead` (repeat)
+   - Child 4: `Response_Bass_Variation` (different ending)
+4. Add occasional probability reduction on later responses (e.g., 80% vs 100%) to create tension.
+5. Wrap in a **Parallel** with a background groove motif to tie sections together.
+
+**Result:** A structured dialogue form that feels composed yet modular.
+
+---
+
+### Example 6: Fibonacci rhythmic scaling
+
+Goal: shape phrase lengths using natural growth (1-2-3-5-8 bars).
+
+**Setup:**
+1. Create a short **Step Sequence** or **Notes** motif with a 1-bar rhythmic cell: `Cell_1bar`.
+2. Duplicate and extend to 2, 3, 5, and 8 bars:
+   - `Phrase_2bars` (2× the cell)
+   - `Phrase_3bars` (3× the cell)
+   - `Phrase_5bars` (5× the cell)
+   - `Phrase_8bars` (8× the cell)
+3. Create a **Series** motif stacking them in Fibonacci order:
+   - Child 1: `Phrase_1bar`
+   - Child 2: `Phrase_2bars`
+   - Child 3: `Phrase_3bars`
+   - Child 4: `Phrase_5bars`
+   - Child 5: `Phrase_8bars`
+4. Keep harmony constant while rhythmic density increases.
+5. Later in the song, reverse the order (8→5→3→2→1) for a natural cooldown.
+
+**Result:** A hypnotic sense of inevitability as patterns unfold in natural mathematical ratios.
+
+---
+
+### Example 7: Instrumental texture mixing
+
+Goal: blend foreground, midground, and background layers to evolve a texture over time.
+
+**Setup:**
+1. Create separate **Notes** motifs for each role:
+   - `Foreground_Lead` (bright, sparse high notes on channel 3)
+   - `Midground_Arp` (quick arpeggios on channel 2)
+   - `Background_Pad` (sustained chords on channel 1)
+   - `Percussion_Bed` (drums/percussion on channel 10)
+2. Create a **Parallel** motif called `Full_Texture`.
+3. Add all four as children with staggered timing:
+   - `Background_Pad`: delay 0 (starts immediately)
+   - `Percussion_Bed`: delay 0 bars
+   - `Midground_Arp`: delay 0.5 bars (enters halfway through)
+   - `Foreground_Lead`: delay 1 bar (last to enter)
+4. Each child routes to a different MIDI channel so they hit different synths in Reaper.
+5. Vary probability/gain per child by section for dynamic texture evolution.
+
+**Result:** A richly layered, gradually unfolding texture where each element enters at its own time, then can be swapped for variations.
+
+---
+
+## 11) Saving, loading, exporting
+
+- **Save sequence:** `File → Save Sequence` / `Save Sequence As...`
+- **Load sequence:** `File → Load Sequence...`
+- **Merge another sequence into current project:** `File → Merge Sequence...`
+- **Export rooted sequence:** `File → Export Root As...`  
   (exports from the current root and drops unrelated motifs)
-- **Load MIDI file into Seq motifs:** `File -> Load MIDI File...`
+- **Load MIDI file into Seq motifs:** `File → Load MIDI File...`
 
 Seq project files use the `.seq` extension.
 
 ---
 
-## 10) Troubleshooting common problems
+## 12) Troubleshooting common problems
 
-### App will not open on macOS
-- Use Control-click -> Open, or run:
-  `sudo xattr -cr /Applications/Seq.app`
+### Java not found / "java" is not recognized
 
-### No sound
-- Set MIDI outputs in **MIDI -> Set MIDI Devices**
-- Confirm destination synth/instrument is active
-- Check channel routing
+- Restart your computer after installing Java (you installed Java in Step 1, right?).
+- Open **Command Prompt** again and type `java -version`.
+- If still missing, Java may not be in your system PATH. Re-run the Java installer and ensure you check "Add to PATH" or reinstall with admin rights.
+
+### Double-clicking `.jar` opens Windows Archive Explorer or does nothing
+
+- Right-click `seq.jar` → **Properties** → check the **Opens with** field.
+- If it shows "Archive Explorer" or "Windows Explorer":
+  - Click **Change...** → scroll down → find **Java(TM) Platform SE binary** or similar.
+  - If Java is not listed, click "More apps" → "Look for another app on this PC" → navigate to Java installation (e.g., `C:\Program Files\Eclipse Adoptium\jdk-21.0.1-hotspot\bin\javaw.exe`).
+  - Set as default and try double-clicking again.
+- If this doesn't work, fall back to **Terminal launch** (see Step 2 above).
+
+### UI window is tiny / blurry on high-DPI monitors
+
+- Ensure you have Java 20 or newer installed (DPI scaling works better in newer versions).
+- Try the command-line launch:
+  ```cmd
+  java -jar seq.jar
+  ```
+- If still blurry, try:
+  ```cmd
+  java -Dsun.java2d.uiScale=2.0 -jar seq.jar
+  ```
+  (Adjust `2.0` to `1.5` or `3.0` depending on your monitor scaling.)
+
+### No sound / MIDI not working
+
+- Go to **MIDI → Set MIDI Devices** and verify at least one output is enabled.
+- Confirm your destination (DAW, synth, etc.) is running and listening for MIDI.
+- If using Reaper: verify the Reaper track input is set to the correct virtual MIDI port and monitoring is on.
+- Try **MIDI → Panic** to clear stuck notes, then test again.
 
 ### Recording does nothing
-- Ensure target motif supports recording (typically **Notes**)
-- Arm the motif
-- Verify MIDI input assignment
+
+- Ensure the target motif supports recording (typically **Notes** or generator motifs).
+- Arm the motif (look for an **Arm** button in the motif inspector).
+- Verify MIDI input is assigned in **MIDI → Set MIDI Devices**.
 
 ### Stuck/hanging notes
-- Use **MIDI -> Panic**
 
-### Tiny UI window on high-resolution screen (Windows)
-- Use Java 20+ (older Java versions are known to have UI scaling issues)
+- Use **MIDI → Panic** immediately.
+- If still stuck, stop playback and use Reaper's **MIDI → Clear all notes** (if recording into Reaper).
 
-### Double-clicking `.jar` opens archive app or does nothing (Windows)
-- Right-click `seq.jar` -> **Open with** -> **Java(TM) Platform SE binary**.
-- If Java is missing from the app list, reinstall JDK 20+ and ensure `.jar` is associated with `javaw.exe`.
-- Fallback launch from terminal:
-  `java -jar seq.jar`
+### Playback has glitches, clicks, or pops
 
-### Playback glitches/clicks
-- Try command-line launch with:
-  `java -XX:+UseZGC -XX:MaxGCPauseMillis=1 -jar seq.jar`
+- Try low-latency launch:
+  ```cmd
+  java -XX:+UseZGC -XX:MaxGCPauseMillis=1 -jar seq.jar
+  ```
+- Lower audio buffer size in Reaper (if using Reaper): **Options → Preferences → Audio Device** (start at 64–256 samples).
+- Close other CPU-heavy applications.
 
----
+### Virtual MIDI port not appearing in Seq/Reaper
 
-## 11) Cockos Reaper DAW integration
-
-This setup lets Seq drive Reaper instruments in real time and record the performance.
-
-### A) Create a virtual MIDI port between Seq and Reaper
-
-#### Windows (loopMIDI)
-1. Install **loopMIDI**.
-2. Open loopMIDI and create a port (example: `SeqToReaper`).
-3. Leave loopMIDI running while using Seq/Reaper.
-
-#### macOS (IAC Driver)
-1. Open **Audio MIDI Setup** -> **Window -> Show MIDI Studio**.
-2. Double-click **IAC Driver** and enable **Device is online**.
-3. Add one bus (example: `SeqToReaper`).
-
-### B) Configure Seq as MIDI sender
-1. Start Seq.
-2. Open **MIDI -> Set MIDI Devices**.
-3. Set output device to `SeqToReaper`.
-4. Pick the channel(s) you want to route (or use separate channels per motif/part).
-
-### C) Configure Reaper to receive Seq MIDI
-1. In Reaper: **Options -> Preferences -> MIDI Devices**.
-2. Enable your virtual input (`SeqToReaper`) and set it to **Enabled + Control** (if needed for transport mappings).
-3. Create a new track and insert a virtual instrument (VSTi/AUi).
-4. Click the track record-arm button.
-5. Set input to: **Input: MIDI -> SeqToReaper -> All Channels** (or a specific channel).
-6. Turn on input monitoring.
-
-### D) Record Seq output into Reaper
-1. In Reaper, set track record mode to MIDI (or Record: output if you want rendered audio from the instrument track).
-2. Press **Record** in Reaper.
-3. Start playback in Seq.
-4. Stop recording in Reaper and save the take.
-5. Quantize/edit in Reaper piano roll if desired.
-
-### E) Live performance workflow tips
-- Use one virtual port and assign stable channel conventions (for example: drums ch10, bass ch2, leads ch3).
-- Build Seq motifs as scenes (intro/verse/chorus/break) and switch roots between song sections.
-- In Reaper, keep one armed "capture" track plus separate instrument tracks for fast rerouting.
-- Save Reaper templates and Seq starter projects together per set/song.
-
-### F) Reaper/virtual MIDI troubleshooting
-- **No MIDI in Reaper:** confirm virtual port exists, is enabled in Reaper Preferences, and selected in Seq output.
-- **Track meters move but no sound:** ensure a VSTi is loaded and monitoring is enabled.
-- **High latency:** lower audio buffer in Reaper audio device settings (start 64–256 samples), then test CPU load.
-- **Timing drift/flams:** avoid routing the same channel to multiple unintended tracks.
-- **Stuck notes:** use **MIDI -> Panic** in Seq; in Reaper, stop transport and send all-notes-off.
-
----
-
-## 12) Advanced compositional examples
-
-These examples are designed to be built directly with standard Seq motifs.
-
-### 1) Generative variation with probability
-Goal: make a repeating groove that evolves without rewriting patterns.
-1. Create a base **Step Sequence** motif for drums.
-2. Duplicate it 2-3 times and alter only a few hits/velocities.
-3. Put variants into a **Series** motif.
-4. Set child probabilities (for example 70/20/10) so the base groove dominates but variations appear.
-5. Add slight delay offsets on rare variants for humanized feel.
-
-### 2) Polyrhythmic layering (3 against 4)
-Goal: create motion by superimposing contrasting cycle lengths.
-1. Create one motif with a 3-step accent cycle.
-2. Create another motif with a 4-step pulse.
-3. Place both in a **Parallel** motif.
-4. Route each to different instruments/timbres for clarity.
-5. Let playback run long enough to hear the full phase relationship reset.
-
-### 3) Hierarchical theme and variations
-Goal: keep one musical identity while evolving arrangement depth.
-1. Write a short **Notes** motif as the core theme.
-2. Duplicate and create subtle pitch/rhythm variants.
-3. Group variants inside a **Series** motif (A, A', A'', B-return).
-4. Wrap that Series in a **Parallel** motif with a constant harmonic pad.
-5. Reuse the same theme motifs in multiple song sections to maintain cohesion.
-
-### 4) Stochastic composition with generators
-Goal: produce controlled randomness for ambient/algorithmic writing.
-1. Add a generator-style motif and set pitch range constraints.
-2. Limit rhythmic density (rest probability, note length bounds).
-3. Feed output into a slower harmonic backing motif in **Parallel**.
-4. Record several passes into Reaper/DAW and comp favorite sections.
-5. Freeze best random states by copying generated ideas into fixed Notes motifs.
-
-### 5) Call-and-response song form
-Goal: alternate musical statements between two voices.
-1. Create a "call" Notes motif (instrument A).
-2. Create a matching "response" Notes motif (instrument B), leaving space after each call.
-3. Arrange as alternating children in a **Series** motif.
-4. Add occasional response probability reduction to create tension.
-5. Use a **Parallel** background groove to tie sections together.
-
-### 6) Fibonacci rhythmic scaling
-Goal: shape phrase lengths using 1-2-3-5-8 style growth.
-1. Build a motif with a 1-bar cell.
-2. Duplicate and expand phrase repeats to 2, 3, 5, then 8 bars.
-3. Place these motifs in a **Series** motif in Fibonacci order.
-4. Keep harmony constant while rhythmic density increases each stage.
-5. Reverse the order later in the song for a natural cooldown arc.
-
-### 7) Instrumental texture mixing
-Goal: blend foreground, midground, and background layers.
-1. Assign motifs into three roles:
-   - foreground (lead hooks)
-   - midground (chords/arps)
-   - background (pads/noise/percussion bed)
-2. Combine roles in a **Parallel** motif.
-3. Use per-child gain/probability to open/close texture by section.
-4. Route roles to separate MIDI channels for DAW-side processing.
-5. Automate transitions by swapping child motifs rather than rewriting entire sections.
+- Restart both Seq and Reaper.
+- Restart Windows if using built-in Windows MIDI loopback.
+- If using VB-Audio Virtual MIDI Router, restart after installation.
+- Recheck **MIDI → Set MIDI Devices** in Seq and MIDI Preferences in Reaper.
 
 ---
 
@@ -384,6 +537,9 @@ Goal: blend foreground, midground, and background layers.
 - **Transport:** Play/Record/Pause/Stop/Loop controls.
 - **Quantize:** Snap notes/events to a timing grid.
 - **MIDI:** A standard language devices use to send musical note/control messages.
+- **Probability:** A percentage chance that a motif will play (used in generative composition).
+- **Delay (child):** Time offset before a child motif starts.
+- **Virtual MIDI port:** A software bridge allowing MIDI data to flow between apps.
 
 ---
 
